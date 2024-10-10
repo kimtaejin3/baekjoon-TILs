@@ -1,36 +1,37 @@
-def func(lev):
-  global S, chars, cnt, choose, ans
-
-  # base case
-  if lev == len(S):
+def make(lev):
+  global n, words, choose, ans, cnt
+  #base case
+  if lev == n:
     ans += 1
     return
 
-  # recursive case
-  for c in chars:
-    if cnt[c] == 0:
+  #recursive case
+  for word in words:
+    if cnt[word] == 0:
       continue
-
-    if (not choose) or (choose[-1] != c):
-      cnt[c] -= 1
-      choose.append(c)
-      func(lev + 1)
-      cnt[c] += 1
+    if (not choose) or choose[-1] != word:
+      choose.append(word)
+      cnt[word] -= 1
+      make(lev + 1)
+      cnt[word] += 1
       choose.pop()
 
-S = input()
-chars = set()
+
+s = input()
+n = len(s)
 cnt = dict()
-
-for c in S:
-  chars.add(c)
-  if c not in cnt:
-    cnt[c] = 0
-  cnt[c] += 1
-
-choose = []
 ans = 0
 
-func(0)
+words = set(s)
+choose = []
+
+for word in list(s):
+  if word not in cnt:
+    cnt[word] = 1
+  else:
+    cnt[word] += 1
+
+make(0)
 
 print(ans)
+

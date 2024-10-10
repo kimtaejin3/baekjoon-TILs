@@ -1,26 +1,22 @@
-n, s = map(int, input().split())
+def search(lev):
+  global N, S, arr, choose, ans
 
-a = list(map(int, input().split()))
-
-choose = []
-
-ans = 0
-
-def sequence(index, level, length):
-  global ans
-  
-  if level == length:
-    if sum(choose) == s:
+  if lev == N:
+    if choose and sum(choose) == S:
       ans += 1
     return
 
-  for i in range(index, n):
-    choose.append(a[i])
-    sequence(i + 1, level + 1, length)
-    choose.pop()
+  choose.append(arr[lev])
+  search(lev + 1)
+  choose.pop()
 
+  search(lev + 1)
 
-for i in range(n):
-  sequence(0,0,i+1)
+N, S = map(int, input().split())
+arr = list(map(int, input().split()))
+choose = []
+ans = 0
+
+search(0)
 
 print(ans)

@@ -1,3 +1,5 @@
+import sys
+input = sys.stdin.readline
 n = int(input())
 
 a = []
@@ -5,20 +7,12 @@ a = []
 for _ in range(n):
     a.append(int(input()))
 
-a = sorted(a)
+a = sorted(a, reverse=True)
 
-left_index = n - 3
-right_index = n
+for i in range(0, len(a)):
+    if sum(a[i+1:i+3]) > a[i]:
+        print(sum(a[i:i+3]))
+        break
 
-ans = -1
-while left_index >= 0:
-    s = a[left_index:right_index]
-
-    if s[2] < s[0] + s[1]:
-        ans = max(ans, sum(s))
-    # print(s)
-
-    left_index -= 1
-    right_index = left_index + 3
-    
-print(ans)
+else:
+    print(-1)

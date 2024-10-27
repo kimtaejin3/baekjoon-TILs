@@ -1,11 +1,10 @@
-n = int(input())
+N = int(input())
+arr = [0] + list(map(int, input().split()))
 
-arr = list(map(int, input().split()))
-dp =[0 for _ in range(n)]
+dp = [0] * (N + 1)
 
-dp[0] = arr[0]
+for n in range(1, N + 1):
+    dp[n] = max(dp[n-1], 0) + arr[n]
 
-for i in range(1, n):
-    dp[i] = max(arr[i], dp[i-1] + arr[i])
+print(max(dp[1:]))
 
-print(max(dp))

@@ -13,24 +13,20 @@ def search(lev):
 
 	# recursive case
 	for n in range(1, 10):
-		if (n not in row[y]) and (n not in col[x]) and (n not in square[y // 3][x // 3]):
-			row[y].add(n)
-			col[x].add(n)
-			square[y // 3][x // 3].add(n)
+		if (not row[y][n]) and (not col[x][n]) and (not square[y // 3][x // 3][n]):
+			row[y][n] = col[x][n] = square[y // 3][x // 3][n] = True
 			matrix[y][x] = n
 
 			search(lev + 1)
 
 			matrix[y][x] = 0
-			square[y // 3][x // 3].remove(n)
-			col[x].remove(n)
-			row[y].remove(n)
+			row[y][n] = col[x][n] = square[y // 3][x // 3][n] = False
 
 
 #initial settings
-row = [set() for _ in range(9)]
-col = [set() for _ in range(9)]
-square = [[set() for _ in range(3)] for _ in range(3)]
+row = [[False] * 10 for _ in range(9)]
+col = [[False] * 10 for _ in range(9)]
+square = [[[False] * 10 for _ in range(3)] for _ in range(3)]
 
 # input
 matrix = [list(map(int, input().split())) for _ in range(9)]
@@ -43,8 +39,6 @@ for i in range(9):
 		if cur == 0:
 			pos.append((i, j))
 		else:
-			row[i].add(cur)
-			col[j].add(cur)
-			square[i // 3][j // 3].add(cur)
+			row[i][cur] = col[j][cur] = square[i // 3][j // 3][cur] = True
 
 search(0)

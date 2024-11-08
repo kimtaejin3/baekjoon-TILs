@@ -40,8 +40,12 @@ def select(lev, n):
         choose.pop()
 
 def select_all():
-    for i in range(1, size_N + 2):
-        select(0, i)
+    if size_N == 1:
+        select(0, 1)
+        select(0, 2)
+    elif size_N > 1:
+        for i in range(size_N - 1, size_N + 2):
+            select(0, i)
 
 select_all()
 

@@ -1,40 +1,29 @@
 from collections import deque
 
-MAX_VAL = 100001
 N, K = map(int, input().split())
+MAX_NUM = 100000
 
-visited = [False] * MAX_VAL
-steps = [0] * MAX_VAL
+arr = [-1 for _ in range(MAX_NUM + 1)]
 
-def in_range(n):
-    return 0 <= n < MAX_VAL
+def bfs(x):
+	q = deque([x])
+	arr[x] = 0
 
-def find_min_dis():
-    q = deque([N])
-    visited[N] = True
-    steps[N] = 0
+	while q:
+		popped = q.popleft()
+		
+		if popped - 1 >= 0 and  arr[popped - 1] == -1:
+			arr[popped - 1] = arr[popped] + 1
+			q.append(popped - 1)
+		
+		if popped + 1 < MAX_NUM + 1 and arr[popped + 1] == -1:
+			arr[popped + 1] = arr[popped] + 1
+			q.append(popped + 1)
+		
+		if popped * 2 < MAX_NUM + 1 and  arr[popped * 2] == -1:
+			arr[popped * 2] = arr[popped] + 1
+			q.append(popped * 2)
+		    
+bfs(N)
 
-    while q:
-        num = q.popleft()
-        
-        if in_range(num-1) and not visited[num - 1]:
-            visited[num - 1] = True
-            steps[num - 1] = steps[num] + 1
-            q.append((num - 1))
-        
-        if in_range(num+1) and not visited[num + 1]:
-            visited[num + 1] = True
-            steps[num + 1] = steps[num] + 1
-            q.append((num + 1))
-        
-        if in_range(num * 2) and not visited[num * 2]:
-            visited[num * 2] = True
-            steps[num * 2] = steps[num] + 1
-            q.append((num * 2))
-
-find_min_dis()
-print(steps[K])
-
-
-    
-
+print(arr[K])

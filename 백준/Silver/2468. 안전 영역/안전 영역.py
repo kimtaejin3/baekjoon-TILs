@@ -1,53 +1,52 @@
 from collections import deque
 
-n = int(input())
+N = int(input())
 
 grid = [
-    list(map(int, input().split()))
-    for _ in range(n)
+	list(map(int, input().split()))
+	for _ in range(N)
 ]
 
 visited = [
-    [False for _ in range(n)]
-    for _ in range(n)
+	[False for _ in range(N)]
+	for _ in range(N)
 ]
 
 def init_visited():
-    for i in range(n):
-        for j in range(n):
-            visited[i][j] = False
+	for i in range(N):
+		for j in range(N):
+			visited[i][j] = False
 
 def in_range(x, y):
-    return 0 <= x < n and 0 <= y < n
+	return 0 <= x < N and 0 <= y < N
 
-def bfs(x, y, h):
-    q = deque([(x, y)])
-    dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]
+def bfs(x, y, k):
+	dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]
+	
+	q = deque([(x, y)])
 
-    while q:
-        x, y = q.popleft()
+	while q:
+		x, y = q.popleft()
+		for dx, dy in zip(dxs, dys):
+			
+			nx, ny = x + dx, y + dy
 
-        for dx, dy in zip(dxs, dys):
-            nx, ny = x + dx, y + dy
-
-            if in_range(nx, ny) and not visited[nx][ny] and grid[nx][ny] > h:
-                visited[nx][ny] = True
-                q.append((nx, ny))
+			if in_range(nx, ny) and not visited[nx][ny] and grid[nx][ny] > k:
+				visited[nx][ny] = True
+				q.append((nx, ny))
 
 
-ans = -1 
-for h in range(101):
-    init_visited()
-    
-    safety_area = 0
-
-    for x in range(n):
-        for y in range(n):
-            if not visited[x][y] and grid[x][y] > h:
-                safety_area += 1
-                visited[x][y] = True
-                bfs(x, y, h)
-    
-    ans = max(ans, safety_area)
+ans = 0
+for k in range(101):
+	init_visited()
+	cnt = 0
+	for x in range(N):
+		for y in range(N):
+			if grid[x][y] > k and not visited[x][y]:
+				cnt += 1
+				visited[x][y] = True
+				bfs(x, y, k)
+	ans = max(cnt, ans)
 
 print(ans)
+

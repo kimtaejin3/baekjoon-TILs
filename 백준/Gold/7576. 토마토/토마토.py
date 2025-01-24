@@ -1,58 +1,56 @@
 from collections import deque
 
-m, n = map(int, input().split())
+M, N = map(int, input().split())
 
 grid = [
-    list(map(int, input().split()))
-    for _ in range(n)
+	list(map(int, input().split()))
+	for _ in range(N)
 ]
 
 steps = [
-    [0 for _ in range(m)]
-    for _ in range(n)
+	[0 for _ in range(M)]
+	for _ in range(N)
 ]
 
-start_idxs  = [(i, j) for i in range(n) for j in range(m) if grid[i][j] == 1]
+not_good_tomato = [(x, y) for x in range(N) for y in range(M) if grid[x][y] == 0]
+good_tomato = [(x, y) for x in range(N) for y in range(M) if grid[x][y] == 1]
 
 def in_range(x, y):
-    return 0 <= x < n and 0 <= y < m
-
+	return 0 <= x < N and 0 <= y < M
 
 def bfs():
-    q = deque(start_idxs)
-    
-    dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]
+	q = deque(good_tomato[:])
+	dxs, dys = [-1, 1, 0, 0], [0, 0, -1, 1]
+	
+	for x, y in good_tomato[:]:
+		steps[x][y] = 1
 
-    for x, y in q:
-        steps[x][y] = 1
+	while q:
+		x, y = q.popleft()
+		step = steps[x][y]
 
-    while q:
-        x, y = q.popleft()
+		for dx, dy in zip(dxs, dys):
+			nx, ny = x + dx, y + dy
 
-        for dx, dy in zip(dxs, dys):
-            nx, ny = x + dx, y + dy
-
-            if in_range(nx, ny) and grid[nx][ny] == 0 and steps[nx][ny] == 0:
-                steps[nx][ny] = steps[x][y] + 1
-                q.append((nx, ny))
-
+			if in_range(nx, ny) and steps[nx][ny] == 0:
+				if grid[nx][ny] == 0:
+					steps[nx][ny] = step + 1
+					q.append((nx, ny))
+				elif grid[nx][ny] == -1:
+					steps[nx][ny] = -1
 
 bfs()
 
-for i in range(n):
-    for j in range(m):
-        if grid[i][j] == -1:
-            steps[i][j] = -1
 
-max_val = -1
-for i in range(n):
-    for j in range(m):
-        max_val = max(max_val, steps[i][j])
-        if steps[i][j] == 0:
-            print(-1)
-            exit(0)
+maxVal = 0
+for i in range(N):
+	for j in range(M):
+		if steps[i][j] == 0 and (i, j) in not_good_tomato:
+			print(-1)
+			exit(0)
+		maxVal = max(maxVal, steps[i][j])
 
-
-print(max_val - 1)
-
-    
+if maxVal == 0:
+	print(0)
+else:
+	print(maxVal - 1)

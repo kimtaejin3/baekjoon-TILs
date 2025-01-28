@@ -1,36 +1,30 @@
-import sys
-input = lambda: sys.stdin.readline().rstrip()
-
 from queue import PriorityQueue
 
 INF = int(1e12)
-Index = 100001
+MAX = int(1e5)
+
 N, K = map(int, input().split())
 
-dist = [INF] * (Index)
+time = [INF] * (MAX + 1)
 
 pq = PriorityQueue()
-dist[N] = 0
+time[N] = 0
 pq.put([0, N])
 
-adj_list = [[] for _ in range(Index)]
-
-for i in range(Index):
-	if i - 1 >= 0:
-		adj_list[i].append([i - 1, 1])
-	if i + 1 < Index:
-		adj_list[i].append([i + 1, 1])
-	if i * 2 < Index:
-		adj_list[i].append([i * 2, 0])
-
 while not pq.empty():
-	cur_dist, cur_node = pq.get()
-	for adj_node, adj_dist in adj_list[cur_node]:
-		temp_dist = cur_dist + adj_dist
-		if temp_dist < dist[adj_node]:
-			dist[adj_node] = temp_dist
-			pq.put([temp_dist, adj_node])
-	
-print(dist[K])
+	cur_time, cur_pos = pq.get()
 
+	nexts = [
+		(cur_time, 2 * cur_pos),
+		(cur_time + 1, cur_pos + 1),
+		(cur_time + 1, cur_pos - 1)
+	]
+
+	for next_time, next_pos in nexts:
+		if 0 <= next_pos <= MAX:
+			if next_time < time[next_pos]:
+				time[next_pos] = next_time
+				pq.put([next_time, next_pos])
+
+print(time[K])
 
